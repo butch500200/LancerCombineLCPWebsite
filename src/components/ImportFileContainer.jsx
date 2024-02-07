@@ -3,6 +3,7 @@ import { Dialog, Grid } from '@mui/material';
 import FileNameDisplay from './FileNameDisplay.jsx';
 import LoadFiles from './LoadFiles.jsx';
 import CreateManifest from './CreateManifest.jsx';
+import downloadLCP from '../utils/DownloadLCP.js';
 
 function ImportFileContainer() {
   const [filesData, setFilesData] = useState();
@@ -64,10 +65,16 @@ function ImportFileContainer() {
     setFilesData(combinedData);
     setManifest(true);
   };
+
   const handleConfirmManifest = (manifestData) => {
     const newFilesData = { ...filesData, 'lcp_manifest.json': manifestData };
-    setFilesData(newFilesData);
-    console.log('file data', newFilesData);
+    const formattedData = Object.keys(newFilesData).map((name) => ({
+      name,
+      content: newFilesData[name],
+    }));
+    console.log('file data', formattedData);
+    downloadLCP(formattedData, manifestData.name);
+    handleClose();
   };
 
   return (
